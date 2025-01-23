@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:profile_example/theme/theme.dart';
+import 'package:profile_example/widgets/profile_heading.dart';
+import 'package:profile_example/widgets/profile_info.dart';
+import 'package:profile_example/widgets/profile_image.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +18,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: lightTheme,
       darkTheme: generateDarkTheme(lightTheme),
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.light,
       home: Scaffold(
         appBar: AppBar(
           title: Text('Simple Layout Demo'),
@@ -24,13 +28,7 @@ class MyApp extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               ProfileHeading(),
-              ClipOval(
-                child: Image.asset(
-                  'assets/images/nathan.jpg',
-                  height: 250,
-                  width: 250,
-                ),
-              ),
+              ProfileImage(imagePath: 'assets/images/nathan.jpg'),
               Text(
                 'Tom Maurer',
                 style: Theme.of(context).textTheme.titleMedium,
@@ -44,73 +42,5 @@ class MyApp extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-final ThemeData lightTheme = ThemeData(
-  colorScheme: ColorScheme.light(),
-  scaffoldBackgroundColor: Colors.white,
-  textTheme: TextTheme(
-    titleLarge: TextStyle(
-      fontSize: 36,
-      fontWeight: FontWeight.bold,
-    ),
-    titleMedium: TextStyle(
-      fontSize: 32,
-      fontWeight: FontWeight.bold,
-    ),
-    labelMedium: TextStyle(
-      fontSize: 20,
-      fontWeight: FontWeight.bold,
-    ),
-    bodyMedium: TextStyle(
-      fontSize: 20,
-    ),
-  ),
-);
-
-ThemeData generateDarkTheme(ThemeData lightTheme) {
-  return lightTheme.copyWith(
-      colorScheme: ColorScheme.dark(),
-      scaffoldBackgroundColor: Colors.blueGrey);
-}
-
-class ProfileHeading extends StatelessWidget {
-  const ProfileHeading({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Text(
-        'Employee Profile',
-        style: Theme.of(context).textTheme.titleLarge,
-      ),
-    );
-  }
-}
-
-class ProfileInfo extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const ProfileInfo(this.label, this.value, {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.only(left: 16),
-        child: Row(
-          children: [
-            Text(
-              '$label: ',
-              style: Theme.of(context).textTheme.labelMedium,
-            ),
-            Text(
-              value,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ],
-        ));
   }
 }
