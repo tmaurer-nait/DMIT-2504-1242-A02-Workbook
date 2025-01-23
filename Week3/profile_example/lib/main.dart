@@ -12,10 +12,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: lightTheme,
+      darkTheme: generateDarkTheme(lightTheme),
+      themeMode: ThemeMode.dark,
       home: Scaffold(
         appBar: AppBar(
           title: Text('Simple Layout Demo'),
@@ -34,10 +33,7 @@ class MyApp extends StatelessWidget {
               ),
               Text(
                 'Tom Maurer',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(context).textTheme.titleMedium,
               ),
               ProfileInfo('Role', 'Instructor'),
               ProfileInfo('Team', 'DMIT'),
@@ -51,6 +47,34 @@ class MyApp extends StatelessWidget {
   }
 }
 
+final ThemeData lightTheme = ThemeData(
+  colorScheme: ColorScheme.light(),
+  scaffoldBackgroundColor: Colors.white,
+  textTheme: TextTheme(
+    titleLarge: TextStyle(
+      fontSize: 36,
+      fontWeight: FontWeight.bold,
+    ),
+    titleMedium: TextStyle(
+      fontSize: 32,
+      fontWeight: FontWeight.bold,
+    ),
+    labelMedium: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+    ),
+    bodyMedium: TextStyle(
+      fontSize: 20,
+    ),
+  ),
+);
+
+ThemeData generateDarkTheme(ThemeData lightTheme) {
+  return lightTheme.copyWith(
+      colorScheme: ColorScheme.dark(),
+      scaffoldBackgroundColor: Colors.blueGrey);
+}
+
 class ProfileHeading extends StatelessWidget {
   const ProfileHeading({super.key});
 
@@ -58,12 +82,9 @@ class ProfileHeading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: const Text(
+      child: Text(
         'Employee Profile',
-        style: TextStyle(
-          fontSize: 36,
-          fontWeight: FontWeight.bold,
-        ),
+        style: Theme.of(context).textTheme.titleLarge,
       ),
     );
   }
@@ -83,16 +104,11 @@ class ProfileInfo extends StatelessWidget {
           children: [
             Text(
               '$label: ',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(context).textTheme.labelMedium,
             ),
             Text(
               value,
-              style: TextStyle(
-                fontSize: 20,
-              ),
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
         ));
