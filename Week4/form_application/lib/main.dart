@@ -119,6 +119,10 @@ class PasswordFormField extends FormField<String> {
             key: key,
             validator: validator,
             builder: (FormFieldState<String> state) {
+              _PasswordFormFieldState customState =
+                  state as _PasswordFormFieldState;
+              customState._controller = controller;
+
               return TextFormField(
                 controller: controller,
                 validator: validator,
@@ -130,8 +134,46 @@ class PasswordFormField extends FormField<String> {
                 ),
                 // Required to enforcce correct validation
                 onChanged: (value) {
-                  state.didChange(value);
+                  customState.didChange(value);
                 },
               );
             });
+
+  // Can create our own custom state if necessary
+  @override
+  FormFieldState<String> createState() => _PasswordFormFieldState();
+}
+
+// Custom form field state for our new custom form field
+class _PasswordFormFieldState extends FormFieldState<String> {
+  TextEditingController? _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    if (_controller != null) {
+      _controller!.addListener(_controllerChanged);
+    }
+  }
+
+  void reset() {
+    super.reset();
+    if (_controller != null) {
+      _controller!.text = '';
+    }
+  }
+
+  void _controllerChanged() {
+    if (_controller != null) {
+      didChange(_controller!.text);
+    }
+  }
+
+  @override
+  void dispose() {
+    if (_controller != null) {
+      _controller!.removeListener(_controllerChanged);
+    }
+    super.dispose();
+  }
 }
