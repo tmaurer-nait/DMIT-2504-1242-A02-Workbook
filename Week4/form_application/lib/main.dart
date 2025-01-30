@@ -52,14 +52,11 @@ class _UserSignupFormState extends State<UserSignupForm> {
         children: [
           Text('New User Form'),
           UserNameInput(controller: _usernameController),
-          TextFormField(
+          PasswordFormField(
             controller: _passwordController,
-            obscureText: true,
-            enableSuggestions: false,
-            autocorrect: false,
-            decoration: InputDecoration(
-              label: Text('Password'),
-            ),
+            validator: (value) => value == null || value.trim().isEmpty
+                ? 'Password cannot be empty'
+                : null,
           ),
           ElevatedButton(
             onPressed: () {
@@ -107,4 +104,34 @@ class _UserNameInputState extends State<UserNameInput> {
       ),
     );
   }
+}
+
+class PasswordFormField extends FormField<String> {
+  final TextEditingController controller;
+  final String label;
+
+  PasswordFormField(
+      {required this.controller,
+      this.label = 'Password',
+      Key? key,
+      FormFieldValidator<String>? validator})
+      : super(
+            key: key,
+            validator: validator,
+            builder: (FormFieldState<String> state) {
+              return TextFormField(
+                controller: controller,
+                validator: validator,
+                obscureText: true,
+                enableSuggestions: false,
+                autocorrect: false,
+                decoration: InputDecoration(
+                  label: Text(label),
+                ),
+                // Required to enforcce correct validation
+                onChanged: (value) {
+                  state.didChange(value);
+                },
+              );
+            });
 }
