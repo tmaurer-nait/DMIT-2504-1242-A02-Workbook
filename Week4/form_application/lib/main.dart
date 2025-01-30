@@ -51,18 +51,7 @@ class _UserSignupFormState extends State<UserSignupForm> {
       child: Column(
         children: [
           Text('New User Form'),
-          TextFormField(
-            // Bind the appropriate controller
-            controller: _usernameController,
-            validator: (value) {
-              return value == null || value.isEmpty
-                  ? 'Username cannot be empty'
-                  : null;
-            },
-            decoration: InputDecoration(
-              label: Text('Username'),
-            ),
-          ),
+          UserNameInput(controller: _usernameController),
           TextFormField(
             controller: _passwordController,
             obscureText: true,
@@ -88,6 +77,33 @@ class _UserSignupFormState extends State<UserSignupForm> {
             child: Text('Sign up'),
           )
         ],
+      ),
+    );
+  }
+}
+
+class UserNameInput extends StatefulWidget {
+  final TextEditingController controller;
+  final String label;
+
+  const UserNameInput(
+      {required this.controller, this.label = 'Username', Key? key})
+      : super(key: key);
+
+  @override
+  State<UserNameInput> createState() => _UserNameInputState();
+}
+
+class _UserNameInputState extends State<UserNameInput> {
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: widget.controller,
+      validator: (value) => value == null || value.trim().isEmpty
+          ? 'Username cannot be empty'
+          : null,
+      decoration: InputDecoration(
+        label: Text(widget.label),
       ),
     );
   }
