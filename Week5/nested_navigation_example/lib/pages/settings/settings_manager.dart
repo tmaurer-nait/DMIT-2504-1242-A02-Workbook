@@ -15,16 +15,34 @@ class SettingsManager extends StatefulWidget {
 }
 
 class _SettingsManagerState extends State<SettingsManager> {
+  final _navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('App Settings'),
-      ),
+      appBar: _buildAppBar(),
       body: Navigator(
+        key: _navigatorKey,
         initialRoute: widget.subRoute,
         onGenerateRoute: _onGenerateRoute,
       ),
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      title: Text('App Settings'),
+      leading: IconButton(
+          onPressed: () {
+            // Check if the sub navigator can pop
+            // if not pop the parent navigator
+            if (_navigatorKey.currentState!.canPop()) {
+              _navigatorKey.currentState!.pop();
+            } else {
+              Navigator.of(context).pop();
+            }
+          },
+          icon: Icon(Icons.arrow_back)),
     );
   }
 

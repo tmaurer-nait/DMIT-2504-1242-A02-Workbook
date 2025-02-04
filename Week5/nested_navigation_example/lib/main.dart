@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nested_navigation_example/routes.dart' as routes;
 import 'package:nested_navigation_example/pages/home_page.dart';
-import 'package:nested_navigation_example/pages/settings_page.dart';
+import 'package:nested_navigation_example/pages/settings/settings_manager.dart';
 
 void main() {
   runApp(const MainApp());
@@ -21,7 +21,7 @@ class MainApp extends StatelessWidget {
             page = HomePage();
             break;
           case routes.settingsHomeRoute:
-            page = SettingsPage();
+            page = SettingsManager(subRoute: settings.name!.substring(10));
             break;
           default:
             throw Exception('Unknown route used: ${settings.name}');

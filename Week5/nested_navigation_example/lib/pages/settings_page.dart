@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nested_navigation_example/routes.dart';
+import 'package:nested_navigation_example/pages/settings/routes.dart' as routes;
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -15,19 +15,19 @@ class SettingsPage extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                // TODO: Implement Navigation
+                Navigator.of(context).pushNamed(routes.settingsOption1Route);
               },
               child: Text('Go to option 1'),
             ),
             ElevatedButton(
               onPressed: () {
-                // TODO: Implement Navigation
+                Navigator.of(context).pushNamed(routes.settingsOption2Route);
               },
               child: Text('Go to option 2'),
             ),
             ElevatedButton(
               onPressed: () {
-                // TODO: Implement Navigation
+                Navigator.of(context).pushNamed(routes.settingsOption3Route);
               },
               child: Text('Go to option 3'),
             ),
