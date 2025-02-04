@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nested_navigation_example/routes.dart';
+import 'package:nested_navigation_example/routes.dart' as routes;
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -15,7 +15,7 @@ class HomePage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // TODO: Navigate to settings
+          Navigator.of(context).pushNamed(routes.settingsHomeRoute);
         },
         child: Icon(Icons.settings),
       ),
