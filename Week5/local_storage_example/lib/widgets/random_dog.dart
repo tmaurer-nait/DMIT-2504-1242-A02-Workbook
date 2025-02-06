@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 
 class RandomDogImage extends StatefulWidget {
@@ -26,39 +28,80 @@ class _RandomDogImageState extends State<RandomDogImage> {
   void initState() {
     super.initState();
 
-    getRandomDogURL().then((url) {
-      setState(() {
-        dogImageUrl = url;
-      });
+    // Open the dog file directory
+    getTemporaryDirectory().then((dir) {
+      final file = File('${dir.path}/dog.jpg');
+
+      // If there is a saved dog use that image
+      if (file.existsSync()) {
+        setState(() {
+          dogImageUrl = '${dir.path}/dog.jpg';
+        });
+      } else {
+        // If there isn't load a dog from the internet
+        getRandomDogURL().then((url) {
+          setState(() {
+            dogImageUrl = url;
+          });
+        });
+      }
     });
   }
 
   Widget _buildDogImage() {
+    Widget outputWidget;
+
+    if (dogImageUrl.trim().isNotEmpty) {
+      // set outputWidget to the dog image
+      if (dogImageUrl.startsWith('http')) {
+        // New dog image from the internet
+        outputWidget = Image.network(dogImageUrl);
+        // If we have a new dog image from the internet save it to file
+        // in case the user restarts the app
+        _saveImage(dogImageUrl);
+      } else {
+        // Old dog image from the file system
+        outputWidget = Image.file(File(dogImageUrl));
+      }
+    } else {
+      outputWidget = CircularProgressIndicator();
+    }
+
     // Wrap this in gesture detection
-    return dogImageUrl.isEmpty
-        ? CircularProgressIndicator()
-        : GestureDetector(
-            onDoubleTap: () {
-              getRandomDogURL().then((url) {
-                setState(() {
-                  likes++;
-                  dogImageUrl = url;
-                });
-              });
-            },
-            onLongPress: () {
-              getRandomDogURL().then((url) {
-                setState(() {
-                  dislikes++;
-                  dogImageUrl = url;
-                });
-              });
-            },
-            child: Image.network(
-              dogImageUrl,
-              height: 250,
-            ),
-          );
+    return GestureDetector(
+      onDoubleTap: () {
+        getRandomDogURL().then((url) {
+          setState(() {
+            likes++;
+            dogImageUrl = url;
+          });
+        });
+      },
+      onLongPress: () {
+        getRandomDogURL().then((url) {
+          setState(() {
+            dislikes++;
+            dogImageUrl = url;
+          });
+        });
+      },
+      child: outputWidget,
+    );
+  }
+
+  void _saveImage(String url) async {
+    // Get the temp directory
+    final dir = await getTemporaryDirectory();
+
+    // Then create the file path
+    final filePath = '${dir.path}/dog.jpg';
+
+    // Get the dog image from the url
+    final response = await http.get(Uri.parse(url));
+
+    // Then write the dog image to the file
+    final file = File(filePath);
+    file.writeAsBytesSync(response.bodyBytes);
   }
 
   @override

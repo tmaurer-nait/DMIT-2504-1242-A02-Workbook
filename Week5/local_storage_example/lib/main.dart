@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:local_storage_example/widgets/random_dog.dart';
 
 // Implement a light and dark mode toggle using shared_preferences
-// TODO: Reimplement the Dog Like/Dislike App
-// TODO: Save the last loaded dog to local file storage
+// Reimplement the Dog Like/Dislike App
+// Save the last loaded dog to local file storage
 // TODO: Save the likes and dislikes using shared_preferences
 
 void main() {
@@ -68,6 +69,7 @@ class _MainAppState extends State<MainApp> {
                 height: 20,
               ),
               Text(_darkmode ? 'darkmode is ON' : 'darkmode is OFF'),
+              RandomDogImage(),
             ],
           ),
         ),
