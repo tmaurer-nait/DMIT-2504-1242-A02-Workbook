@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
@@ -41,6 +42,45 @@ class ApplicationState extends ChangeNotifier {
     _todos = todos;
   }
 
+  void _fetchTodos() {
+    if (user == null) {
+      throw StateError('Cannot get todos when user is null');
+    }
+
+    FirebaseFirestore.instance
+        .collection('todos/${user!.uid}/todos')
+        .get()
+        .then((snapshot) {
+      // Convert each item in the snapshot into a Todo and update the state
+      todos = snapshot.docs.map((doc) => Todo.fromFirestore(doc)).toList();
+    });
+  }
+
+  void updateTodo({required Todo todo}) {
+    if (user == null) {
+      throw StateError('Cannot get todos when user is null');
+    }
+
+    FirebaseFirestore.instance
+        .collection('todos/${user!.uid}/todos')
+        .doc(todo.id)
+        .update(todo.toMap());
+  }
+
+  void deleteTodo({required Todo todo}) {
+    if (user == null) {
+      throw StateError('Cannot get todos when user is null');
+    }
+
+    FirebaseFirestore.instance
+        .collection('todos/${user!.uid}/todos')
+        .doc(todo.id)
+        .delete()
+        .then((_) {
+      todos!.remove(todo);
+    });
+  }
+
   Future<void> init() async {
     // Call this before app start to connect to firebase
     await Firebase.initializeApp(
@@ -54,12 +94,8 @@ class ApplicationState extends ChangeNotifier {
         // update the app state to store the user info
         this.user = user;
 
-        // TODO: fetch that users todos and store them in the state
-        todos = [
-          Todo(completed: false, description: 'Buy eggs'),
-          Todo(description: 'buy milk', completed: true),
-          Todo(description: 'buy cheese', completed: false)
-        ];
+        // fetch that users todos and store them in the state
+        _fetchTodos();
       } else {
         _loggedIn = false;
       }

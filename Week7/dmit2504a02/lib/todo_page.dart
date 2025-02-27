@@ -21,7 +21,12 @@ class _TodoPageState extends State<TodoPage> {
 
     // Initially set all the todos to be equal to the app state todos (in line with firestore)
     setState(() {
-      _todoList = widget.appState.todos!;
+      // We are expecting todos but that may not be the case, depending on how you created users
+      if (widget.appState.todos == null) {
+        _todoList = [];
+      } else {
+        _todoList = widget.appState.todos!;
+      }
     });
   }
 
@@ -53,14 +58,16 @@ class _TodoPageState extends State<TodoPage> {
                 onChanged: (value) {
                   setState(() {
                     todo.completed = value!;
-                    // TODO: Update the appstate to change the firestore
+                    // Update the appstate to change the firestore
+                    widget.appState.updateTodo(todo: todo);
                   });
                 }),
           ),
           onDismissed: (direction) {
             setState(() {
               todos.removeAt(index);
-              // TODO: Update the appstate to change the firestore
+              // Update the appstate to change the firestore
+              widget.appState.deleteTodo(todo: todo);
             });
           },
         );
