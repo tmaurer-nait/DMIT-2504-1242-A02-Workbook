@@ -1,4 +1,5 @@
 import 'package:dmit2504a02/home_page.dart';
+import 'package:dmit2504a02/todo_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 
@@ -62,10 +63,28 @@ class MainApp extends StatelessWidget {
             Navigator.pushReplacementNamed(context, '/');
           })
         ]);
-      }
+      },
     };
     return MaterialApp(
       routes: routes,
+      onGenerateRoute: (settings) {
+        // Protect route
+        if (settings.name == '/todos') {
+          // Perform an Auth check, only Authenticated users can access todos page else we have exceptions
+          if (authAppState.loggedIn) {
+            return MaterialPageRoute(builder: (context) {
+              return TodoPage(appState: authAppState);
+            });
+          } else {
+            // not logged in, reroute to home page
+            return MaterialPageRoute(builder: (context) {
+              return HomePage(authAppState: authAppState);
+            });
+          }
+        }
+        // If route is not protected, use default behaviour
+        return null;
+      },
     );
   }
 }

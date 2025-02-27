@@ -4,4 +4,7 @@ class Todo {
   String description;
   bool completed;
   String? id;
+
+  // TODO: Create a from firestore factory constructor
+  // TODO: Create a toMap method
 }
