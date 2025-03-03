@@ -25,7 +25,7 @@ class HomePage extends StatelessWidget {
             ElevatedButton(
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => FirstNamePage(user: user),
+                  builder: (context) => FirstNamePage(),
                 ),
               ),
               child: const Text('First Name Page'),
@@ -36,7 +36,7 @@ class HomePage extends StatelessWidget {
             ElevatedButton(
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => LastNamePage(user: user),
+                  builder: (context) => LastNamePage(),
                 ),
               ),
               child: const Text('Last Name Page'),
