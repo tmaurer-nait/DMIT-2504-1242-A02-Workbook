@@ -26,8 +26,19 @@ void main() {
     // Find the widgets
     final nameFinder = find.text('Name: Tom Maurer');
     final emailFinder = find.text('Email: tmaurer@nait.ca');
+    final fabFinder = find.byType(FloatingActionButton);
 
-    // Assert
+    // Assert that it's nothing at the start
+    expect(nameFinder, findsNothing);
+    expect(emailFinder, findsNothing);
+
+    // Tap on the button
+    await tester.tap(fabFinder);
+
+    // Wait for renders
+    await tester.pump(Duration(seconds: 1));
+
+    // Assert that text is visible
     expect(nameFinder, findsOneWidget);
     expect(emailFinder, findsOneWidget);
   });
